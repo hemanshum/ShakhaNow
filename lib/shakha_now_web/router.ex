@@ -32,7 +32,11 @@ defmodule ShakhaNowWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{ShakhaNowWeb.UserAuth, :require_authenticated}] do
-      live "/dashboard", UserLive.Settings, :edit
+      live "/dashboard", DashboardLive.Index, :index
+      live "/shakhas", ShakhaLive.Index, :index
+      live "/shakhas/new", ShakhaLive.Form, :new
+      live "/shakhas/:id", ShakhaLive.Show, :show
+      live "/shakhas/:id/edit", ShakhaLive.Form, :edit
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end

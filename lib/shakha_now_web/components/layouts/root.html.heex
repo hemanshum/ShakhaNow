@@ -11,27 +11,63 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
   </head>
-  <body class="bg-base-200">
+  <body class="bg-base-200 h-screen w-full">
     <%= if @current_scope do %>
-      <div class="navbar bg-base-100 shadow-sm relative z-10 px-4 sm:px-6 lg:px-8">
-        <div class="flex-1">
-          <a class="btn btn-ghost text-xl">ShakhaNow</a>
-        </div>
-        <div class="flex-none">
-          <ul class="menu menu-horizontal px-1 items-center">
-            <li class="mr-4">
-              <span class="text-sm opacity-70">{@current_scope.user.email}</span>
+      <div class="drawer lg:drawer-open h-full">
+        <input id="app-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col h-full overflow-hidden">
+          <!-- Mobile navbar -->
+          <div class="navbar bg-base-100 lg:hidden shadow-sm">
+            <div class="flex-none">
+              <label for="app-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost">
+                <.icon name="hero-bars-3" class="size-6" />
+              </label>
+            </div>
+            <div class="flex-1">
+              <a class="btn btn-ghost text-xl">ShakhaNow</a>
+            </div>
+          </div>
+          <!-- Page content -->
+          <div class="flex-1 overflow-y-auto">
+            {@inner_content}
+          </div>
+        </div> 
+        <div class="drawer-side z-20 h-full">
+          <label for="app-drawer" aria-label="close sidebar" class="drawer-overlay"></label> 
+          <ul class="menu p-4 w-64 min-h-full bg-base-100 text-base-content flex flex-col gap-2 shadow-lg">
+            <li><a class="text-2xl font-bold mb-4">ShakhaNow</a></li>
+            <li>
+              <.link navigate={~p"/dashboard"} class="font-medium">
+                <.icon name="hero-home" class="size-5" />
+                Dashboard
+              </.link>
             </li>
             <li>
-              <.link href={~p"/dashboard"}>Dashboard</.link>
+              <.link navigate={~p"/shakhas"}>
+                <.icon name="hero-building-office" class="size-5" />
+                Shakhas
+              </.link>
+            </li>
+            <div class="flex-1"></div>
+            <div class="divider"></div>
+            <li class="menu-title">{@current_scope.user.email}</li>
+            <li>
+              <.link navigate={~p"/users/settings"}>
+                <.icon name="hero-cog-8-tooth" class="size-5" />
+                Settings
+              </.link>
             </li>
             <li>
-              <.link href={~p"/users/log-out"} method="delete" class="text-error">Log out</.link>
+              <.link href={~p"/users/log-out"} method="delete" class="text-error">
+                <.icon name="hero-arrow-right-on-rectangle" class="size-5" />
+                Log out
+              </.link>
             </li>
           </ul>
         </div>
       </div>
+    <% else %>
+      {@inner_content}
     <% end %>
-    {@inner_content}
   </body>
 </html>
