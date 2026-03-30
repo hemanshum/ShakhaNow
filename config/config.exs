@@ -7,6 +7,32 @@
 # General application configuration
 import Config
 
+config :shakha_now, :scopes,
+  accounts_user: [
+    default: false,
+    module: ShakhaNow.Accounts.Scope,
+    assign_key: :current_scope,
+    access_path: [:user, :id],
+    schema_key: :user_id,
+    schema_type: :id,
+    schema_table: :users,
+    test_data_fixture: ShakhaNow.AccountsFixtures,
+    test_setup_helper: :register_and_log_in_user
+  ]
+
+config :shakha_now, :scopes,
+  user: [
+    default: true,
+    module: ShakhaNow.Accounts.Scope,
+    assign_key: :current_scope,
+    access_path: [:user, :id],
+    schema_key: :user_id,
+    schema_type: :id,
+    schema_table: :users,
+    test_data_fixture: ShakhaNow.AccountsFixtures,
+    test_setup_helper: :register_and_log_in_user
+  ]
+
 config :shakha_now,
   ecto_repos: [ShakhaNow.Repo],
   generators: [timestamp_type: :utc_datetime]
