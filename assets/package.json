@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "tailwindcss": "^4.2.2",
+    "tom-select": "^2.5.2"
+  }
+}

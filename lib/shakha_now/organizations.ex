@@ -59,7 +59,9 @@ defmodule ShakhaNow.Organizations do
 
   """
   def get_shakha!(%Scope{} = scope, id) do
-    Repo.get_by!(Shakha, id: id, user_id: scope.user.id)
+    Shakha
+    |> Repo.get_by!(id: id, user_id: scope.user.id)
+    |> Repo.preload([:mukhya_shikshak, :karyavah])
   end
 
   @doc """

@@ -35,14 +35,89 @@ defmodule ShakhaNowWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <main class="p-4 sm:p-6 lg:p-8 flex-1">
-      <div class="mx-auto max-w-7xl">
-        {render_slot(@inner_block)}
+    <%= if @current_scope do %>
+      <div class="drawer lg:drawer-open h-full">
+        <input id="app-drawer" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col h-full overflow-hidden">
+          <!-- Mobile navbar -->
+          <div class="navbar bg-base-100 lg:hidden shadow-sm">
+            <div class="flex-none">
+              <label for="app-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost">
+                <.icon name="hero-bars-3" class="size-6" />
+              </label>
+            </div>
+            <div class="flex-1">
+              <a class="btn btn-ghost text-xl">ShakhaNow</a>
+            </div>
+          </div>
+          <!-- Page content -->
+          <div class="flex-1 overflow-y-auto">
+            <main class="p-4 sm:p-6 lg:p-8">
+              <div class="mx-auto max-w-7xl">
+                {render_slot(@inner_block)}
+              </div>
+            </main>
+          </div>
+        </div>
+        <div class="drawer-side z-20 h-full border-r border-base-200">
+          <label for="app-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+          <ul class="menu p-4 w-64 min-h-full bg-base-100 text-base-content flex flex-col gap-2">
+            <li><a class="text-2xl font-bold mb-4 hover:bg-transparent">ShakhaNow</a></li>
+            <li>
+              <.link navigate={~p"/dashboard"} class={["font-medium", active_tab?(assigns, ShakhaNowWeb.DashboardLive.Index) && "active bg-base-200"]}>
+                <.icon name="hero-home" class="size-5" />
+                Dashboard
+              </.link>
+            </li>
+            <li>
+              <.link navigate={~p"/shakhas"} class={["font-medium", active_tab?(assigns, [ShakhaNowWeb.ShakhaLive.Index, ShakhaNowWeb.ShakhaLive.Show, ShakhaNowWeb.ShakhaLive.Form]) && "active bg-base-200"]}>
+                <.icon name="hero-building-office" class="size-5" />
+                Shakhas
+              </.link>
+            </li>
+            <li>
+              <.link navigate={~p"/swayamsevaks"} class={["font-medium", active_tab?(assigns, [ShakhaNowWeb.SwayamsevakLive.Index, ShakhaNowWeb.SwayamsevakLive.Show, ShakhaNowWeb.SwayamsevakLive.Form]) && "active bg-base-200"]}>
+                <.icon name="hero-user" class="size-5" />
+                Swayamsevaks
+              </.link>
+            </li>
+            <div class="flex-1"></div>
+            <div class="divider my-0"></div>
+            <li class="menu-title">{@current_scope.user.email}</li>
+            <li>
+              <.link navigate={~p"/users/settings"} class={["font-medium", active_tab?(assigns, ShakhaNowWeb.UserLive.Settings) && "active bg-base-200"]}>
+                <.icon name="hero-cog-8-tooth" class="size-5" />
+                Settings
+              </.link>
+            </li>
+            <li>
+              <.link href={~p"/users/log-out"} method="delete" class="text-error font-medium hover:bg-error/10 hover:text-error">
+                <.icon name="hero-arrow-right-on-rectangle" class="size-5" />
+                Log out
+              </.link>
+            </li>
+          </ul>
+        </div>
       </div>
-    </main>
+    <% else %>
+      <main class="p-4 sm:p-6 lg:p-8 flex-1">
+        <div class="mx-auto max-w-7xl">
+          {render_slot(@inner_block)}
+        </div>
+      </main>
+    <% end %>
 
     <.flash_group flash={@flash} />
     """
+  end
+
+  defp active_tab?(assigns, expected_views) when is_list(expected_views) do
+    view = assigns[:socket] && assigns.socket.view
+    view in expected_views
+  end
+
+  defp active_tab?(assigns, expected_view) do
+    active_tab?(assigns, [expected_view])
   end
 
   @doc """

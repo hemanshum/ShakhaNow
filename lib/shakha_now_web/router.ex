@@ -33,6 +33,10 @@ defmodule ShakhaNowWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{ShakhaNowWeb.UserAuth, :require_authenticated}] do
       live "/dashboard", DashboardLive.Index, :index
+      live "/swayamsevaks", SwayamsevakLive.Index, :index
+      live "/swayamsevaks/new", SwayamsevakLive.Form, :new
+      live "/swayamsevaks/:id", SwayamsevakLive.Show, :show
+      live "/swayamsevaks/:id/edit", SwayamsevakLive.Form, :edit
       live "/shakhas", ShakhaLive.Index, :index
       live "/shakhas/new", ShakhaLive.Form, :new
       live "/shakhas/:id", ShakhaLive.Show, :show

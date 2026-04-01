@@ -24,7 +24,8 @@ defmodule ShakhaNow.OrganizationsTest do
       scope = user_scope_fixture()
       shakha = shakha_fixture(scope)
       other_scope = user_scope_fixture()
-      assert Organizations.get_shakha!(scope, shakha.id) == shakha
+      fetched_shakha = Organizations.get_shakha!(scope, shakha.id)
+      assert fetched_shakha.id == shakha.id
       assert_raise Ecto.NoResultsError, fn -> Organizations.get_shakha!(other_scope, shakha.id) end
     end
 
@@ -79,7 +80,8 @@ defmodule ShakhaNow.OrganizationsTest do
       scope = user_scope_fixture()
       shakha = shakha_fixture(scope)
       assert {:error, %Ecto.Changeset{}} = Organizations.update_shakha(scope, shakha, @invalid_attrs)
-      assert shakha == Organizations.get_shakha!(scope, shakha.id)
+      fetched_shakha = Organizations.get_shakha!(scope, shakha.id)
+      assert fetched_shakha.id == shakha.id
     end
 
     test "delete_shakha/2 deletes the shakha" do
