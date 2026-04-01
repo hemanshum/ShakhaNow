@@ -16,8 +16,14 @@ defmodule ShakhaNow.MembersTest do
       other_scope = user_scope_fixture()
       swayamsevak = swayamsevak_fixture(scope)
       other_swayamsevak = swayamsevak_fixture(other_scope)
-      assert Members.list_swayamsevaks(scope) == [swayamsevak]
-      assert Members.list_swayamsevaks(other_scope) == [other_swayamsevak]
+      
+      fetched = Members.list_swayamsevaks(scope)
+      assert length(fetched) == 1
+      assert hd(fetched).id == swayamsevak.id
+      
+      fetched_other = Members.list_swayamsevaks(other_scope)
+      assert length(fetched_other) == 1
+      assert hd(fetched_other).id == other_swayamsevak.id
     end
 
     test "get_swayamsevak!/2 returns the swayamsevak with given id" do

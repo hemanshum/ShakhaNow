@@ -32,7 +32,10 @@ defmodule ShakhaNowWeb.SwayamsevakLive.Index do
         rows={@streams.swayamsevaks}
         row_click={fn {_id, swayamsevak} -> JS.navigate(~p"/swayamsevaks/#{swayamsevak}") end}
       >
-        <:col :let={{_id, swayamsevak}} label="Full name">{swayamsevak.full_name}</:col>
+        <:col :let={{_id, swayamsevak}} label="Full name">
+          <div class="font-medium">{swayamsevak.full_name}</div>
+          <div class="text-sm text-base-content/70 mt-1">{role_and_shakha(swayamsevak)}</div>
+        </:col>
         <:col :let={{_id, swayamsevak}} label="Mobile number">{swayamsevak.mobile_number}</:col>
         <:col :let={{_id, swayamsevak}} label="Whatsapp number">{swayamsevak.whatsapp_number}</:col>
         <:col :let={{_id, swayamsevak}} label="Date of birth">{swayamsevak.date_of_birth}</:col>
@@ -183,4 +186,28 @@ defmodule ShakhaNowWeb.SwayamsevakLive.Index do
     end
   end
   defp parse_address(_), do: ["", "", ""]
+
+  defp role_and_shakha(swayamsevak) do
+    ms_roles =
+      if Ecto.assoc_loaded?(swayamsevak.shakhas_as_mukhya_shikshak) do
+        Enum.map(swayamsevak.shakhas_as_mukhya_shikshak, &"Mukhya Shikshak, #{&1.name}")
+      else
+        []
+      end
+
+    k_roles =
+      if Ecto.assoc_loaded?(swayamsevak.shakhas_as_karyavah) do
+        Enum.map(swayamsevak.shakhas_as_karyavah, &"Karyavah, #{&1.name}")
+      else
+        []
+      end
+
+    all_roles = ms_roles ++ k_roles
+
+    if all_roles == [] do
+      "Swayamsevak"
+    else
+      Enum.join(all_roles, " | ")
+    end
+  end
 end

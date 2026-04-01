@@ -14,6 +14,8 @@ defmodule ShakhaNow.Members.Swayamsevak do
     field :occupation, :string
     field :education, :string
     field :user_id, :id
+    has_many :shakhas_as_mukhya_shikshak, ShakhaNow.Organizations.Shakha, foreign_key: :mukhya_shikshak_id
+    has_many :shakhas_as_karyavah, ShakhaNow.Organizations.Shakha, foreign_key: :karyavah_id
 
     timestamps(type: :utc_datetime)
   end
