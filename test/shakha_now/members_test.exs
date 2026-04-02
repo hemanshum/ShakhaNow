@@ -9,7 +9,7 @@ defmodule ShakhaNow.MembersTest do
     import ShakhaNow.AccountsFixtures, only: [user_scope_fixture: 0]
     import ShakhaNow.MembersFixtures
 
-    @invalid_attrs %{full_name: nil, mobile_number: nil, whatsapp_number: nil, date_of_birth: nil, photo_path: nil, area: nil, city: nil, pincode: nil, occupation: nil, occupation_details: nil, education: nil}
+    @invalid_attrs %{full_name: nil, email: nil, mobile_number: nil, whatsapp_number: nil, date_of_birth: nil, photo_path: nil, area: nil, city: nil, pincode: nil, occupation: nil, occupation_details: nil, education: nil}
 
     test "list_swayamsevaks/1 returns all scoped swayamsevaks" do
       scope = user_scope_fixture()
@@ -35,11 +35,12 @@ defmodule ShakhaNow.MembersTest do
     end
 
     test "create_swayamsevak/2 with valid data creates a swayamsevak" do
-      valid_attrs = %{full_name: "some full_name", mobile_number: "1234567890", whatsapp_number: "1234567890", date_of_birth: ~D[2026-03-31], photo_path: "some photo_path", area: "some area", city: "some city", pincode: "123456", occupation: "some occupation", education: "some education"}
+      valid_attrs = %{full_name: "some full_name", email: "test@example.com", mobile_number: "1234567890", whatsapp_number: "1234567890", date_of_birth: ~D[2026-03-31], photo_path: "some photo_path", area: "some area", city: "some city", pincode: "123456", occupation: "some occupation", education: "some education"}
       scope = user_scope_fixture()
 
       assert {:ok, %Swayamsevak{} = swayamsevak} = Members.create_swayamsevak(scope, valid_attrs)
       assert swayamsevak.full_name == "some full_name"
+      assert swayamsevak.email == "test@example.com"
       assert swayamsevak.mobile_number == "1234567890"
       assert swayamsevak.whatsapp_number == "1234567890"
       assert swayamsevak.date_of_birth == ~D[2026-03-31]
@@ -60,18 +61,19 @@ defmodule ShakhaNow.MembersTest do
     test "update_swayamsevak/3 with valid data updates the swayamsevak" do
       scope = user_scope_fixture()
       swayamsevak = swayamsevak_fixture(scope)
-      update_attrs = %{full_name: "some updated full_name", mobile_number: "0987654321", whatsapp_number: "0987654321", date_of_birth: ~D[2026-04-01], photo_path: "some updated photo_path", area: "some updated area", city: "some updated city", pincode: "654321", occupation: "some updated occupation", education: "some updated education"}
+      update_attrs = %{full_name: "some updated full_name", email: "updated@example.com", mobile_number: "9876543210", whatsapp_number: "9876543210", date_of_birth: ~D[2026-04-01], photo_path: "some updated photo_path", area: "some updated area", city: "some updated city", pincode: "654321", occupation: "Service", education: "some updated education"}
 
       assert {:ok, %Swayamsevak{} = swayamsevak} = Members.update_swayamsevak(scope, swayamsevak, update_attrs)
       assert swayamsevak.full_name == "some updated full_name"
-      assert swayamsevak.mobile_number == "0987654321"
-      assert swayamsevak.whatsapp_number == "0987654321"
+      assert swayamsevak.email == "updated@example.com"
+      assert swayamsevak.mobile_number == "9876543210"
+      assert swayamsevak.whatsapp_number == "9876543210"
       assert swayamsevak.date_of_birth == ~D[2026-04-01]
       assert swayamsevak.photo_path == "some updated photo_path"
       assert swayamsevak.area == "some updated area"
       assert swayamsevak.city == "some updated city"
       assert swayamsevak.pincode == "654321"
-      assert swayamsevak.occupation == "some updated occupation"
+      assert swayamsevak.occupation == "Service"
       assert swayamsevak.education == "some updated education"
     end
 

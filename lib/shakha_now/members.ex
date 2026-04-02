@@ -40,10 +40,10 @@ defmodule ShakhaNow.Members do
       [%Swayamsevak{}, ...]
 
   """
-  def list_swayamsevaks(%Scope{} = scope) do
+  def list_swayamsevaks(user_scope) do
     Swayamsevak
-    |> where([s], s.user_id == ^scope.user.id)
-    |> preload([:shakhas_as_mukhya_shikshak, :shakhas_as_karyavah])
+    |> where([s], s.user_id == ^user_scope.user.id)
+    |> preload([:shakha, :shakhas_as_mukhya_shikshak, :shakhas_as_karyavah])
     |> Repo.all()
   end
 

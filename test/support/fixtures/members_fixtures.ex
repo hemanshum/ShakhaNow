@@ -8,21 +8,24 @@ defmodule ShakhaNow.MembersFixtures do
   Generate a swayamsevak.
   """
   def swayamsevak_fixture(scope, attrs \\ %{}) do
-    attrs =
-      Enum.into(attrs, %{
+    unique_num = System.unique_integer([:positive])
+    
+    {:ok, swayamsevak} =
+      ShakhaNow.Members.create_swayamsevak(scope, attrs
+      |> Enum.into(%{
         area: "some area",
         city: "some city",
         date_of_birth: ~D[2026-03-31],
         education: "some education",
         full_name: "some full_name",
-        mobile_number: "9876543210" <> Integer.to_string(System.unique_integer([:positive])),
+        email: "user#{unique_num}@example.com",
+        mobile_number: "9876543210#{unique_num}",
         occupation: "Student",
         photo_path: "some photo_path",
         pincode: "123456",
         whatsapp_number: "9876543210"
-      })
+      }))
 
-    {:ok, swayamsevak} = ShakhaNow.Members.create_swayamsevak(scope, attrs)
     swayamsevak
   end
 end

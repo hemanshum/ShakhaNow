@@ -5,9 +5,9 @@ defmodule ShakhaNowWeb.SwayamsevakLiveTest do
   import ShakhaNow.MembersFixtures
   import ShakhaNow.AccountsFixtures
 
-  @create_attrs %{full_name: "some full_name", mobile_number: "1234567890", whatsapp_number: "1234567890", date_of_birth: "2026-03-31", photo_path: "some photo_path", area: "some area", city: "some city", pincode: "123456", occupation: "Student", education: "some education"}
-  @update_attrs %{full_name: "some updated full_name", mobile_number: "0987654321", whatsapp_number: "0987654321", date_of_birth: "2026-04-01", photo_path: "some updated photo_path", area: "some updated area", city: "some updated city", pincode: "654321", occupation: "Business", education: "some updated education"}
-  @invalid_attrs %{full_name: nil, mobile_number: nil, whatsapp_number: nil, date_of_birth: nil, photo_path: nil, area: nil, city: nil, pincode: nil, occupation: nil, education: nil}
+  @create_attrs %{full_name: "some full_name", email: "test@example.com", mobile_number: "1234567890", whatsapp_number: "1234567890", date_of_birth: "2026-03-31", photo_path: "some photo_path", area: "some area", city: "some city", pincode: "123456", occupation: "Student", education: "some education"}
+  @update_attrs %{full_name: "some updated full_name", email: "updated@example.com", mobile_number: "0987654321", whatsapp_number: "0987654321", date_of_birth: "2026-04-01", photo_path: "some updated photo_path", area: "some updated area", city: "some updated city", pincode: "654321", occupation: "Business", education: "some updated education"}
+  @invalid_attrs %{full_name: nil, email: nil, mobile_number: nil, whatsapp_number: nil, date_of_birth: nil, photo_path: nil, area: nil, city: nil, pincode: nil, occupation: nil, education: nil}
 
   defp create_swayamsevak(%{user: user}) do
     scope = %ShakhaNow.Accounts.Scope{user: user}

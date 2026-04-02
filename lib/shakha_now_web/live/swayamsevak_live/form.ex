@@ -16,7 +16,43 @@ defmodule ShakhaNowWeb.SwayamsevakLive.Form do
       <.form for={@form} id="swayamsevak-form" phx-change="validate" phx-submit="save" class="space-y-4 mt-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <.input field={@form[:full_name]} type="text" label="Full name" required />
+          <.input field={@form[:email]} type="email" label="Email" required />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <.input field={@form[:date_of_birth]} type="date" label="Date of birth" />
+        </div>
+
+        <div class="divider text-sm">Shakha & Role Details</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <.input
+            field={@form[:shakha_id]}
+            type="select"
+            label="Shakha (Optional)"
+            options={@shakhas}
+            prompt="Select a Shakha"
+          />
+          <.input
+            field={@form[:role]}
+            type="select"
+            label="Role"
+            options={[
+              {"Swayamsevak", "Swayamsevak"},
+              {"Gatnayak", "Gatnayak"},
+              {"Karyavha", "Karyavha"},
+              {"MukhyaShishak", "MukhyaShishak"}
+            ]}
+          />
+          <.input
+            field={@form[:attendance_type]}
+            type="select"
+            label="Attendance Type (Optional)"
+            options={[
+              {"Daily", "Daily"},
+              {"Weekends", "Weekends"}
+            ]}
+            prompt="Select attendance type"
+          />
         </div>
 
         <div class="divider text-sm">Contact Details</div>
@@ -62,9 +98,13 @@ defmodule ShakhaNowWeb.SwayamsevakLive.Form do
 
   @impl true
   def mount(params, _session, socket) do
+    shakhas = ShakhaNow.Organizations.list_shakhas(socket.assigns.current_scope)
+    shakha_options = Enum.map(shakhas, &{&1.name, &1.id})
+
     {:ok,
      socket
      |> assign(:return_to, return_to(params["return_to"]))
+     |> assign(:shakhas, shakha_options)
      |> apply_action(socket.assigns.live_action, params)}
   end
 

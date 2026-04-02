@@ -27,35 +27,66 @@ defmodule ShakhaNowWeb.SwayamsevakLive.Index do
         <% end %>
       </div>
 
-      <.table
-        id="swayamsevaks"
-        rows={@streams.swayamsevaks}
-        row_click={fn {_id, swayamsevak} -> JS.navigate(~p"/swayamsevaks/#{swayamsevak}") end}
-      >
-        <:col :let={{_id, swayamsevak}} label="Full name">
-          <div class="font-medium">{swayamsevak.full_name}</div>
-          <div class="text-sm text-base-content/70 mt-1">{role_and_shakha(swayamsevak)}</div>
-        </:col>
-        <:col :let={{_id, swayamsevak}} label="Mobile number">{swayamsevak.mobile_number}</:col>
-        <:col :let={{_id, swayamsevak}} label="Whatsapp number">{swayamsevak.whatsapp_number}</:col>
-        <:col :let={{_id, swayamsevak}} label="Date of birth">{swayamsevak.date_of_birth}</:col>
-        <:col :let={{_id, swayamsevak}} label="City">{swayamsevak.city}</:col>
-        <:col :let={{_id, swayamsevak}} label="Occupation">{swayamsevak.occupation}</:col>
-        <:action :let={{_id, swayamsevak}}>
-          <div class="sr-only">
-            <.link navigate={~p"/swayamsevaks/#{swayamsevak}"}>Show</.link>
-          </div>
-          <.link navigate={~p"/swayamsevaks/#{swayamsevak}/edit"}>Edit</.link>
-        </:action>
-        <:action :let={{id, swayamsevak}}>
-          <.link
-            phx-click={JS.push("delete", value: %{id: swayamsevak.id}) |> hide("##{id}")}
-            data-confirm="Are you sure?"
-          >
-            Delete
-          </.link>
-        </:action>
-      </.table>
+      <div class="overflow-x-auto rounded-box border border-base-200">
+        <table class="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>Name & Details</th>
+              <th>Contact</th>
+              <th>Location</th>
+              <th>Occupation</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="swayamsevaks">
+            <tr :for={{id, swayamsevak} <- @streams.swayamsevaks} id={id}>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="mask mask-squircle w-12 h-12">
+                      <img src={swayamsevak.photo_path || "https://ui-avatars.com/api/?name=#{URI.encode(swayamsevak.full_name)}&background=random"} alt={swayamsevak.full_name} />
+                    </div>
+                  </div>
+                  <div>
+                    <div class="font-bold">{swayamsevak.full_name}</div>
+                    <div class="text-sm opacity-50">{role_and_shakha(swayamsevak)}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="text-sm">
+                  <div><a href={"mailto:#{swayamsevak.email}"} class="link link-hover">{swayamsevak.email}</a></div>
+                  <div><a href={"tel:#{swayamsevak.mobile_number}"} class="link link-hover">{swayamsevak.mobile_number}</a></div>
+                  <div :if={swayamsevak.whatsapp_number} class="text-xs opacity-50">WA: {swayamsevak.whatsapp_number}</div>
+                </div>
+              </td>
+              <td>
+                <div class="text-sm">
+                  <div>{swayamsevak.city}</div>
+                  <div class="text-xs opacity-50">{swayamsevak.area}</div>
+                </div>
+              </td>
+              <td>
+                <div class="text-sm">{swayamsevak.occupation}</div>
+              </td>
+              <td>
+                <div class="flex justify-end">
+                  <div class="sr-only">
+                    <.link navigate={~p"/swayamsevaks/#{swayamsevak}"}>Show</.link>
+                  </div>
+                  <.link navigate={~p"/swayamsevaks/#{swayamsevak}/edit"}>Edit</.link>
+                  <.link
+                    phx-click={JS.push("delete", value: %{id: swayamsevak.id}) |> hide("##{id}")}
+                    data-confirm="Are you sure?"
+                  >
+                    Delete
+                  </.link>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </Layouts.app>
     """
   end
@@ -188,26 +219,18 @@ defmodule ShakhaNowWeb.SwayamsevakLive.Index do
   defp parse_address(_), do: ["", "", ""]
 
   defp role_and_shakha(swayamsevak) do
-    ms_roles =
-      if Ecto.assoc_loaded?(swayamsevak.shakhas_as_mukhya_shikshak) do
-        Enum.map(swayamsevak.shakhas_as_mukhya_shikshak, &"Mukhya Shikshak, #{&1.name}")
+    role = swayamsevak.role || "Swayamsevak"
+    shakha = 
+      if swayamsevak.shakha do
+        swayamsevak.shakha.name
       else
-        []
+        nil
       end
 
-    k_roles =
-      if Ecto.assoc_loaded?(swayamsevak.shakhas_as_karyavah) do
-        Enum.map(swayamsevak.shakhas_as_karyavah, &"Karyavah, #{&1.name}")
-      else
-        []
-      end
-
-    all_roles = ms_roles ++ k_roles
-
-    if all_roles == [] do
-      "Swayamsevak"
+    if shakha do
+      "#{role}, #{shakha}"
     else
-      Enum.join(all_roles, " | ")
+      role
     end
   end
 end
