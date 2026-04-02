@@ -48,6 +48,17 @@ defmodule ShakhaNow.Members do
   end
 
   @doc """
+  Returns the list of swayamsevaks for a given shakha.
+  """
+  def list_swayamsevaks_for_shakha(user_scope, shakha_id) do
+    shakha_id = if is_binary(shakha_id), do: String.to_integer(shakha_id), else: shakha_id
+    Swayamsevak
+    |> where([s], s.user_id == ^user_scope.user.id and s.shakha_id == ^shakha_id)
+    |> preload([:shakha, :shakhas_as_mukhya_shikshak, :shakhas_as_karyavah])
+    |> Repo.all()
+  end
+
+  @doc """
   Gets a single swayamsevak.
 
   Raises `Ecto.NoResultsError` if the Swayamsevak does not exist.
