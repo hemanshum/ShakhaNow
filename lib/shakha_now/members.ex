@@ -62,7 +62,10 @@ defmodule ShakhaNow.Members do
 
   """
   def get_swayamsevak!(%Scope{} = scope, id) do
-    Repo.get_by!(Swayamsevak, id: id, user_id: scope.user.id)
+    Swayamsevak
+    |> where([s], s.user_id == ^scope.user.id and s.id == ^id)
+    |> preload([:shakha, :shakhas_as_mukhya_shikshak, :shakhas_as_karyavah])
+    |> Repo.one!()
   end
 
   @doc """
@@ -82,6 +85,8 @@ defmodule ShakhaNow.Members do
            %Swayamsevak{}
            |> Swayamsevak.changeset(attrs, scope)
            |> Repo.insert() do
+      
+      swayamsevak = Repo.preload(swayamsevak, [:shakha, :shakhas_as_mukhya_shikshak, :shakhas_as_karyavah])
       broadcast_swayamsevak(scope, {:created, swayamsevak})
       {:ok, swayamsevak}
     end
@@ -106,6 +111,8 @@ defmodule ShakhaNow.Members do
            swayamsevak
            |> Swayamsevak.changeset(attrs, scope)
            |> Repo.update() do
+           
+      swayamsevak = Repo.preload(swayamsevak, [:shakha, :shakhas_as_mukhya_shikshak, :shakhas_as_karyavah])
       broadcast_swayamsevak(scope, {:updated, swayamsevak})
       {:ok, swayamsevak}
     end
