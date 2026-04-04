@@ -59,7 +59,10 @@ defmodule ShakhaNowWeb.SwayamsevakLive.Index do
                   </div>
                   <div>
                     <div class="font-bold">{swayamsevak.full_name}</div>
-                    <div class="text-sm opacity-50">{role_and_shakha(swayamsevak)}</div>
+                    <div class="text-sm mt-1 flex items-center gap-1">
+                      <.role_badge role={swayamsevak.role || "Swayamsevak"} />
+                      <span :if={swayamsevak.shakha} class="opacity-50">, {swayamsevak.shakha.name}</span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -323,20 +326,4 @@ defmodule ShakhaNowWeb.SwayamsevakLive.Index do
     end
   end
   defp parse_address(_), do: ["", "", ""]
-
-  defp role_and_shakha(swayamsevak) do
-    role = swayamsevak.role || "Swayamsevak"
-    shakha = 
-      if swayamsevak.shakha do
-        swayamsevak.shakha.name
-      else
-        nil
-      end
-
-    if shakha do
-      "#{role}, #{shakha}"
-    else
-      role
-    end
-  end
 end

@@ -495,4 +495,33 @@ defmodule ShakhaNowWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  @doc """
+  Renders a badge for a specific role with a unique color.
+  """
+  attr :role, :string, required: true
+  attr :class, :string, default: nil
+  
+  def role_badge(assigns) do
+    assigns = assign_new(assigns, :class, fn -> nil end)
+    assigns = assign(assigns, :style_classes, case assigns.role do
+      "MukhyaShishak" -> "color: #dc2626; border-color: #f87171; background-color: rgba(254, 242, 242, 0.5);"
+      "Karyavha" -> "color: #9333ea; border-color: #c084fc; background-color: rgba(250, 245, 255, 0.5);"
+      "Gatnayak" -> "color: #0284c7; border-color: #38bdf8; background-color: rgba(240, 249, 255, 0.5);"
+      "Swayamsevak" -> nil
+      _ -> nil
+    end)
+    
+    ~H"""
+    <span 
+      style={@style_classes}
+      class={[
+        "badge badge-outline badge-sm font-medium whitespace-nowrap", 
+        !@style_classes && "badge-primary",
+        @class
+      ]}>
+      {@role}
+    </span>
+    """
+  end
 end

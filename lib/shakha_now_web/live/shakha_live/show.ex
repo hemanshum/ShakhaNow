@@ -121,7 +121,7 @@ defmodule ShakhaNowWeb.ShakhaLive.Show do
                   </div>
                 </td>
                 <td>
-                  <span class="badge badge-primary badge-outline badge-sm font-medium">{swayamsevak.role}</span>
+                  <.role_badge role={swayamsevak.role} />
                 </td>
               </tr>
             </tbody>
